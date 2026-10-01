@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-blue-100 selection:text-blue-900 min-h-screen;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+}
+
+/* Custom Scrollbar for dense enterprise tables */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.saas-card {
+  @apply bg-white border border-slate-200 rounded-lg shadow-xs p-5 transition-all duration-150;
+}
+
+.saas-table {
+  @apply w-full text-left text-sm text-slate-700 border-collapse;
+}
+
+.saas-table th {
+  @apply bg-slate-100/80 text-slate-600 font-semibold px-4 py-3 border-b border-slate-200 text-xs uppercase tracking-wider;
+}
+
+.saas-table td {
+  @apply px-4 py-3 border-b border-slate-100 text-slate-800 font-medium;
+}
+
+.saas-table tr:hover td {
+  @apply bg-slate-50/80;
+}
