@@ -1,0 +1,49 @@
+# Helm Values configuration for Vehicure
+
+replicaCount:
+  backend: 3
+  frontend: 2
+
+image:
+  backend:
+    repository: vehicure/backend
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  frontend:
+    repository: vehicure/frontend
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+service:
+  backend:
+    type: ClusterIP
+    port: 8000
+  frontend:
+    type: LoadBalancer
+    port: 80
+
+env:
+  SIMULATOR_NUM_VEHICLES: "100000"
+  ENV: "production"
+
+resources:
+  backend:
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+    requests:
+      cpu: "250m"
+      memory: "256Mi"
+  frontend:
+    limits:
+      cpu: "250m"
+      memory: "256Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 75

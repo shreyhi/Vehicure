@@ -1,0 +1,9 @@
+apiVersion: v2
+name: vehicure
+description: Production Helm Chart for Vehicure Predictive Vehicle Health Platform
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+maintainers:
+  - name: Vehicure DevOps Team
+    email: devops@vehicure.io

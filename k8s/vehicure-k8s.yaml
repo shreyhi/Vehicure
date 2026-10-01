@@ -1,0 +1,103 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vehicure
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vehicure-config
+  namespace: vehicure
+data:
+  ENV: "production"
+  SIMULATOR_NUM_VEHICLES: "100000"
+  DATABASE_URL: "postgresql+asyncpg://vehicure:vehicure_pass@postgres-service:5432/vehicure_db"
+  REDIS_URL: "redis://redis-service:6379/0"
+  MONGO_URL: "mongodb://mongo-service:27017"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehicure-backend
+  namespace: vehicure
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: vehicure-backend
+  template:
+    metadata:
+      labels:
+        app: vehicure-backend
+    spec:
+      containers:
+        - name: backend
+          image: vehicure/backend:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: vehicure-config
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vehicure-backend-service
+  namespace: vehicure
+spec:
+  selector:
+    app: vehicure-backend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehicure-frontend
+  namespace: vehicure
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vehicure-frontend
+  template:
+    metadata:
+      labels:
+        app: vehicure-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: vehicure/frontend:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vehicure-frontend-service
+  namespace: vehicure
+spec:
+  selector:
+    app: vehicure-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer

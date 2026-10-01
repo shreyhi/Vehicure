@@ -1,0 +1,66 @@
+name: Vehicure CI & Security Scan Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-test-security:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: vehicure_db
+          POSTGRES_USER: vehicure
+          POSTGRES_PASSWORD: vehicure_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+          pip install bandit safety pytest-cov
+
+      - name: Run Pytest Test Suite
+        run: |
+          cd backend
+          pytest tests/ -v --cov=app --cov-report=term-missing
+
+      - name: Execute Bandit SAST Security Scan
+        run: |
+          mkdir -p security_reports
+          bandit -r backend/app -f json -o security_reports/bandit_results.json || true
+          bandit -r backend/app -f txt || true
+
+      - name: Execute Dependency Security Scan
+        run: |
+          safety check -r backend/requirements.txt --json > security_reports/safety_results.json || true
+
+      - name: Upload Security & Test Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-and-test-reports
+          path: security_reports/
