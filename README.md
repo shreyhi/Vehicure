@@ -93,3 +93,12 @@ npm run dev                          # Starts Vite dev server at http://localhos
 - [`solution_document/SECURITY_THREAT_MODEL.md`](./solution_document/SECURITY_THREAT_MODEL.md): STRIDE Threat Model & OWASP API Top 10 Mitigations.
 - [`solution_document/PERFORMANCE_AND_EVIDENCE.md`](./solution_document/PERFORMANCE_AND_EVIDENCE.md): Measured Performance Latencies, ML Evaluation Report, and Pytest Evidence.
 - [`solution_document/ADRs/`](./solution_document/ADRs/): 5 Architecture Decision Records (ADR 001–005).
+
+## 📄 Submission Materials
+
+- 🎥 **Demo Video:** [Watch Vehicure Demo](YOUR_VIDEO_FILE_LINK)
+- 📑 **Solution Document:** [View Vehicure Solution Document](YOUR_PDF_FILE_LINK)
+
+## 📄 Submission Materials
+
+- 🎥📑 **Demo Video & Solution Document:** [Google Drive Submission Folder](https://drive.google.com/drive/folders/1cDE6TlgsrnmWxdyN11dAPFf-k4r3aong?usp=sharing)
